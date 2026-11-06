@@ -13,32 +13,41 @@ header{
 
 
 .images{
-    display:inline-flexbox;
+    display:flex;
+    align-items: center;
+    /*justify-content: center;*/
     margin: 1rem;
     width:90rem;
+    min-height:25rem;
 }
 
-#towerofaudio{
+
+#towerofaudio, #keyboard , #gitr{
     margin:0rem;
-    border-radius: 1rem;
+    border-radius: 3rem;
     height: 20rem;    
     filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
+    filter:blur(5px) saturate(0);
+    transition:0.2s;
 
 }
 
-#keyboard{
+#towerofaudio:hover, #keyboard:hover , #gitr:hover{
     margin:0rem;
     border-radius: 1rem;
-    height: 20rem;       
+    height: 25rem;    
     filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
+    filter:blur(0px) saturate(1);
 }
 
-#gitr{
+#towerofaudio:active, #keyboard:active , #gitr:active{
     margin:0rem;
     border-radius: 1rem;
-    height: 20rem;       
+    height: 30rem;    
     filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
+    filter:blur(0px) saturate(1);
 }
+
 
 .mp-0{
     margin:0;
