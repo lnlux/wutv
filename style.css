@@ -11,21 +11,33 @@ header{
     background: linear-gradient(rgba(10,10,60,255),rgba(10,14,30,0));
 }
 
-#ableton-image{
-    margin-left:2rem;
+
+.images{
+    display:inline-flexbox;
+    margin: 1rem;
+    width:90rem;
+}
+
+#towerofaudio{
+    margin:0rem;
     border-radius: 1rem;
-    width: 50rem;    
-    filter: drop-shadow(0 0 1rem rgba(0, 255, 255, 0.125));
+    height: 20rem;    
+    filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
 
 }
 
-#dontworryaboutit{
-    position:fixed;
-    top:0;
-    left:0;
-    width:50rem;
-    opacity:0.01;
-    filter:blur(1rem);
+#keyboard{
+    margin:0rem;
+    border-radius: 1rem;
+    height: 20rem;       
+    filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
+}
+
+#gitr{
+    margin:0rem;
+    border-radius: 1rem;
+    height: 20rem;       
+    filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
 }
 
 .mp-0{
@@ -36,3 +48,5 @@ header{
 a{
     color:rgb(130, 130, 255);
 }
+
+
