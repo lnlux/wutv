@@ -24,11 +24,11 @@ header{
 
 #towerofaudio, #keyboard , #gitr{
     margin:0rem;
-    border-radius: 3rem;
+    border-radius: 2rem;
     height: 20rem;    
     filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
-    filter:blur(5px) saturate(0);
-    transition:0.2s;
+    filter:blur(5px) saturate(0.5);
+    transition:0.5s;
 
 }
 
@@ -38,14 +38,16 @@ header{
     height: 25rem;    
     filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
     filter:blur(0px) saturate(1);
+    transform:rotate(20deg);
 }
 
 #towerofaudio:active, #keyboard:active , #gitr:active{
     margin:0rem;
     border-radius: 1rem;
-    height: 30rem;    
+    height: 33em;    
     filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
     filter:blur(0px) saturate(1);
+    transform:rotate(0deg);
 }
 
 
