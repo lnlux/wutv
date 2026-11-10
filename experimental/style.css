@@ -1,0 +1,35 @@
+body{
+    margin:0;
+    font-family:'Courier New', Courier, monospace;
+    background-color: #000;
+}
+
+header{
+    display: flex;
+
+    margin:0;
+    padding:0;
+
+    align-content: center;
+
+    height:2rem;
+
+    background-color: rgb(20,20,20);
+
+    transition: 1s;
+
+    
+}
+
+header:hover{
+    height: 10rem;
+}
+
+h1{
+    margin:0;
+    color:white;
+}
+
+p{
+    color:white;
+}
