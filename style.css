@@ -1,3 +1,7 @@
+*{
+    box-sizing: border-box;
+}
+
 body{
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgb(10,14,30);
@@ -6,48 +10,68 @@ body{
 h1,h2,h3,h4,h5,h6,p,li{
     color:white;
 }
-
 header{
     background: linear-gradient(rgba(10,10,60,255),rgba(10,14,30,0));
+    padding:20px;
 }
 
 
 .images{
     display:flex;
     align-items: center;
-    /*justify-content: center;*/
-    margin: 1rem;
-    width:90rem;
+    justify-content: center;
+    margin: 10px;
+    width: 90rem;
     min-height:25rem;
 }
 
+.container{
+    background-color:rgb(51, 55, 56);
+    margin:20px auto;
+    padding:15px;
+    width:500px;
+    height:250px;   
+    border-radius: 1rem;
+}
 
-#towerofaudio, #keyboard , #gitr{
-    margin:0rem;
+.card{
+    background-color: rgb(35,35,55);
+    height:100%;
+    width:100%;
+    padding:15px;
+
+    border: white solid 2px;
+    border-radius: 0.4rem;
+}
+
+
+
+#towerofaudio, #keyboard, #gitr {
+    position:relative;
+    z-index: 1;
+    margin: 0rem;
     border-radius: 2rem;
-    height: 20rem;    
-    filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
-    filter:blur(10px) saturate(0);
-    transition:0.5s;
-
+    height: 20rem;
+    filter: drop-shadow(0 0 1rem rgba(71, 32, 100, 0.5)) blur(5px) sepia(100%) hue-rotate(-155deg) saturate(200%) brightness(55%);
+    transition: 0.5s;
 }
 
-#towerofaudio:hover, #keyboard:hover , #gitr:hover{
-    margin:0rem;
+#towerofaudio:hover, #keyboard:hover, #gitr:hover {
+    z-index: 10;
+    margin: 0rem;
     border-radius: 1rem;
-    height: 25rem;    
-    filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
-    filter:blur(0px) saturate(1);
-    transform:rotate(20deg);
+    height: 25rem;
+    filter: drop-shadow(0 0 1rem rgba(71, 32, 100, 0.5)) blur(0px) sepia(0%) hue-rotate(0deg) saturate(100%) brightness(100%);
+    transform: rotate(20deg);
 }
 
-#towerofaudio:active, #keyboard:active , #gitr:active{
-    margin:0rem;
+#towerofaudio:active, #keyboard:active, #gitr:active {
+    z-index: 10;
+    margin: 0rem;
     border-radius: 1rem;
-    height: 33em;    
-    filter: drop-shadow(0 0 1rem rgb(71, 32, 100, 0.5));
-    filter:blur(0px) saturate(1);
-    transform:rotate(0deg);
+    height: 33em;
+    filter: drop-shadow(0 0 1rem rgba(71, 32, 100, 0.5)) blur(0px) sepia(0%) hue-rotate(0deg) saturate(100%) brightness(100%);
+    transform: rotate(0deg);
 }
 
 
