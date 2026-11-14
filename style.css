@@ -21,7 +21,7 @@ header{
     align-items: center;
     justify-content: center;
     margin: 10px;
-    width: 90rem;
+    width: auto;
     min-height:25rem;
 }
 
@@ -35,9 +35,8 @@ header{
 }
 
 .card{
-     transition: 1s;
-    background: #000000;
-    background: radial-gradient(circle, rgba(0, 0, 40, 1) 0%, rgba(0, 0, 0, 1) 100%);
+    transition: 0.2s;
+    background: #040422;
     height:100%;
     width:100%;
     padding:15px;
@@ -50,8 +49,7 @@ header{
 }
 
 .card:hover{
-    background: #000000;
-    background: radial-gradient(circle,rgba(0, 0, 0, 1) 0%, rgba(1, 1, 43, 1) 100%);
+    background: #051133;
     height:100%;
     width:100%;
     padding:15px;
@@ -60,7 +58,6 @@ header{
     border-radius: 0.4rem;
 
     filter:drop-shadow(0.4rem 2rem 3rem rgba(0,0,0,0.5));
-    transition: 1s;
 }
 
 

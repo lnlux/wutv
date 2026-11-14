@@ -1,32 +1,80 @@
 body{
-    margin:0;
+    margin:10px;
+    padding: 2px;
     font-family:'Courier New', Courier, monospace;
     background-color: #000;
 }
 
+
 header{
-    display: flex;
-
-    margin:0;
-    padding:0;
-
-    align-content: center;
-
+    width:fit-content;
+    padding:20px;
+    border:#fff solid 1px;
+    border-radius: 1rem;
     height:2rem;
-
-    background-color: rgb(20,20,20);
-
-    transition: 1s;
-
-    
+    background-color:#111;
 }
 
-header:hover{
-    height: 10rem;
+.exit-button{
+    position:fixed;
+    top:0;
+    right:0;
+    margin:10px;
+    background-color: #000;
+    width:40px;
+    height:40px;
+    border: none;
+    border-radius: 1rem;
+
+    transition: 0.5s;
+
+}
+
+.dot{
+    margin:auto;
+
+    width:10px;
+    height:10px;
+
+    border-radius: 30%;
+    background-color: white;
+    filter: drop-shadow(0 0 0.3rem black);
+
+    transition: 0.7s;
+}
+
+.exit-button:hover{
+    border-radius: 2rem;
+    filter: drop-shadow(0 1rem 2rem #f00);
+}
+
+.exit-button:active{
+    border-radius: 2rem;
+    filter: drop-shadow(0 0.2rem 1rem #f00);
+    border: red solid 1px;
+}
+
+.exit-button:active .dot{
+    border-radius: 2rem;
+    filter: drop-shadow(0 0.2rem 0.2rem #f00);
+    background-color: red;
+}
+
+.exit-button:hover .dot{
+    transform: scale(2) rotate(90deg);
+    border-radius: 50%;
+    background-color: #700000;
+    filter: drop-shadow(0 0 0.2rem red);
+}
+
+
+@keyframes red{
+    from{background-color: #f00;}
+    to{}
 }
 
 h1{
-    margin:0;
+    margin:auto;
     color:white;
 }
 
