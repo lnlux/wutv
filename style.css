@@ -2,9 +2,18 @@
     box-sizing: border-box;
 }
 
+img{
+    border-radius: 1rem;
+}
+
+iframe{
+    border-radius: 1rem;
+}
+
 body{
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgb(10,14,30);
+    margin:0;
 }
 
 h1,h2,h3,h4,h5,h6,p,li{
@@ -12,12 +21,13 @@ h1,h2,h3,h4,h5,h6,p,li{
 }
 header{
     background: linear-gradient(rgba(10,10,60,255),rgba(10,14,30,0));
-    padding:20px;
+    padding: 1rem;
 }
 
 
+
 .images{
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     margin: 10px;
@@ -101,3 +111,10 @@ a{
 }
 
 
+section{
+    margin:1rem;
+}
+
+footer{
+    margin:1rem;
+}
