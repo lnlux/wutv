@@ -1,0 +1,21 @@
+body{
+    background-color: gray;
+}
+
+.box{
+    margin:auto;
+    width: 20px;
+    height: 40px;
+    background-color: black;
+}
+
+#circle{
+    display: block;
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-radius: 50%;
+    background-color: white;
+
+    transform: translate(-50%,-50%);
+}

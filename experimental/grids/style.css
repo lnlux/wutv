@@ -1,0 +1,38 @@
+body{
+    background-color: #333;
+}
+
+.container{
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    display: grid;
+    grid-template-columns: repeat(40,25px);
+    grid-template-rows: repeat(20,25px);
+    align-items: center;
+    justify-items: center;
+}
+
+.tile{
+    width:20px;
+    height:20px;
+    border-radius: 4px;
+    background-color: #555;
+
+    transition: 0.1s;
+}
+
+.tile:hover{
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    background-color: #aaa;
+
+    filter:drop-shadow(0 1rem 2rem black);
+    border-radius: 5px;
+}
+
+.tile:active{
+    background-color: white;
+}

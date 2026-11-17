@@ -88,6 +88,7 @@ p{
 }
 
 .grid{
+    margin: 10px;
     width: 400px;
     background-color: #111;
     border: white solid 1px;
