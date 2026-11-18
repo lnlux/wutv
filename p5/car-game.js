@@ -1,16 +1,23 @@
 let game = {
+        inGame: true,
         isAlive: true,
         score:0,
+
+        pauseColor:0,
 
         distanceToEnemy: 0,
 
         centerX: 0, //  width / 2
         centerY: 0,  //  height / 2
 
+        camera: {
+            xOffset:0
+        },
+
         debug: {
             enabled: true,
 
-            enemyLane:"dunno",
+            enemyLane:"if your reading this, something went terribly wrong",
         },
 };
 
@@ -34,6 +41,11 @@ let player = {
 
     movement: {
         turnSpeed: 0.5,
+        acceleration:0.001,
+
+
+        speedPrevFrame:0,
+        GforceNowX:0,
         speed:0
     },
 
@@ -71,6 +83,7 @@ let enemy = {
         turnSpeed: 0.5,
         targetSpeed:8,
         speed:0,
+        acceleration:0.025,
         isBraking:0
     },
 
@@ -89,15 +102,12 @@ let enemy = {
     }
 };
 
-
-
 function setup(){
     createCanvas(windowWidth, windowHeight)
     background(255,0,0);
     game.centerX = width/2;
     game.centerY = height/2;
 
-    let d;
 
     player.transform.y = game.centerY;
 
@@ -109,7 +119,49 @@ function setup(){
     enemy.leftLane();
 }
 
+
+function reset(){
+    game.isAlive=true;
+    game.inGame=true;
+
+    game.score=0;
+    game.camera.xOffset=0;
+
+    road.line.x=0;
+
+    player.transform.x=50;
+    player.rightLane();
+
+    player.movement.speed=0;
+
+    enemy.speed=0;
+    enemy.transform.x = width - 50 - enemy.transform.width;
+    
+}
+
+function keyPressed(){
+    
+    if(key === ESCAPE){
+            reset();
+    }
+
+
+    if(game.isAlive===true && game.inGame===true){
+        if(key === "w"){
+            player.leftLane();
+        }
+
+        if(key === "s"){
+            player.rightLane();
+        }
+    }
+}
+
+
 function draw(){
+
+
+    player.movement.speedPrevFrame=player.movement.speed;
 
     //Distance from enemy to player
 
@@ -135,22 +187,23 @@ function draw(){
 
     
     // Basic Enemy A.I
-    if (
-        player.transform.lane === enemy.transform.lane &&
-        game.distanceToEnemy < 1000 &&
-        enemy.transform.x > player.transform.x
-    ) {
-        enemy.movement.isBraking = 1;
-        enemy.movement.speed *= 0.98;
-    } else {
-        enemy.movement.isBraking = 0;
-    }
+    if(game.inGame){
+        if (
+            player.transform.lane === enemy.transform.lane &&
+            game.distanceToEnemy < 1000 &&
+            enemy.transform.x > player.transform.x
+        ) {
+            enemy.movement.isBraking = 1;
+            enemy.movement.speed *= 0.98;
+        } else {
+            enemy.movement.isBraking = 0;
+        }
 
-    if (enemy.movement.speed < enemy.movement.targetSpeed && enemy.movement.isBraking === 0) {
-        enemy.movement.speed += 0.025;
-    }
+        if (enemy.movement.speed < enemy.movement.targetSpeed && enemy.movement.isBraking === 0) {
+            enemy.movement.speed += enemy.movement.acceleration;
+        }
 
-    
+    }
 
     
 
@@ -159,32 +212,34 @@ function draw(){
 
 
     //Move Forward
-    if(player.movement.speed>0){
-    game.score += player.movement.speed;
-    }
+    if(game.inGame){
 
-    enemy.transform.x -= enemy.movement.speed + player.movement.speed*deltaTime;
-    road.line.x -= player.movement.speed*deltaTime;
-
-    if(player.movement.speed <= 0.01 && player.movement.speed >= -0.01){
-        player.movement.speed = 0;
-    }
-
-    if(road.line.x <= 0-width/2 || road.line.x >= width/2){
-        road.line.x = 0;
-    }
-
-
-
-    //Move Forward  -   Enemy Spawning
-    if(enemy.transform.x <= 0-enemy.transform.width*2){
-        enemy.transform.x = width*2;
-
-        if(random(0, 1) <= 0.5){
-            enemy.leftLane();
-        } else{
-            enemy.rightLane();
+        if(player.movement.speed>0){
+            game.score += player.movement.speed;
         }
+
+        enemy.transform.x -= enemy.movement.speed + player.movement.speed*deltaTime;
+        road.line.x -= player.movement.speed*deltaTime;
+
+        if(player.movement.speed <= 0.01 && player.movement.speed >= -0.01){
+            player.movement.speed = 0;
+        }
+
+        if(road.line.x <= 0-width/2 || road.line.x >= width/2){
+            road.line.x = 0;
+        }
+
+        //Move Forward  -   Enemy Spawning
+        if(enemy.transform.x <= 0-enemy.transform.width*2){
+            enemy.transform.x = width*2;
+
+            if(random(0, 1) <= 0.5){
+                enemy.leftLane();
+            } else{
+                enemy.rightLane();
+            }
+        }
+
     }
 
 
@@ -197,13 +252,13 @@ function draw(){
     //  W,S
     //
     //
-    if(game.isAlive==true){
+    if(game.isAlive==true && game.inGame == true){
         if(keyIsDown("d")){
-            player.movement.speed += 0.001 * deltaTime;
+            player.movement.speed += player.movement.acceleration * deltaTime;
         }
 
         if(keyIsDown("a")){
-            player.movement.speed -= 0.001 * deltaTime;
+            player.movement.speed -= player.movement.acceleration * deltaTime;
         }
 
         if(keyIsDown(" ")){
@@ -213,11 +268,39 @@ function draw(){
 
 
 
+    //Acceleration effect
+
+
     //Grass
     background(85, 164, 37);
 
 
 
+    //Road
+    noStroke();
+    fill(60);
+    rect(0,game.centerY-road.width,width,road.width*2);
+
+    //Road Line 
+    stroke(255);
+    strokeWeight(2);
+
+    line(road.line.x    - 1*(width/4)   +game.camera.xOffset           ,game.centerY,          road.line.x-2*(width/4)  +game.camera.xOffset   ,game.centerY);
+
+    line(road.line.x     +game.camera.xOffset    ,game.centerY,          road.line.x+(width/4    +game.camera.xOffset)   ,game.centerY);
+
+    line(road.line.x    + 2*(width/4)    +game.camera.xOffset           ,game.centerY,          road.line.x+3*(width/4)  +game.camera.xOffset   ,game.centerY);
+
+    line(road.line.x    + 4*(width/4)    +game.camera.xOffset           ,game.centerY,          road.line.x+5*(width/4)  +game.camera.xOffset   ,game.centerY);
+    noStroke();
+
+    // Player
+    fill(40, 85, 180);
+    rect(player.transform.x  +game.camera.xOffset, player.transform.y - player.transform.height / 2, player.transform.width, player.transform.height);
+
+    // Passing Car
+    fill(180, 10, 50);
+    rect(enemy.transform.x   +game.camera.xOffset, enemy.transform.y - enemy.transform.height / 2, enemy.transform.width, enemy.transform.height);
 
     textAlign(LEFT);
 
@@ -247,58 +330,60 @@ function draw(){
 
 
 
-    //Road
-    noStroke();
-    fill(60);
-    rect(0,game.centerY-road.width,width,road.width*2);
-
-    //Road Line 
-    stroke(255);
-    strokeWeight(2);
-
-    line(road.line.x    - 1*(width/4)           ,game.centerY,          road.line.x-2*(width/4)   ,game.centerY);
-
-    line(road.line.x    ,game.centerY,          road.line.x+(width/4)   ,game.centerY);
-
-    line(road.line.x    + 2*(width/4)           ,game.centerY,          road.line.x+3*(width/4)   ,game.centerY);
-
-    line(road.line.x    + 4*(width/4)           ,game.centerY,          road.line.x+5*(width/4)   ,game.centerY);
-    noStroke();
-
-    // Player
-    fill(40, 85, 180);
-    rect(player.transform.x, player.transform.y - player.transform.height / 2, player.transform.width, player.transform.height);
-
-    // Passing Car
-    fill(180, 10, 50);
-    rect(enemy.transform.x, enemy.transform.y - enemy.transform.height / 2, enemy.transform.width, enemy.transform.height);
 
 
 
-    //debug
+    //PAUSE
+    if(game.inGame===false && game.isAlive){
+        fill(0,0,0,200);
+        rect(0,0,width);
+
+        fill(255);
+
+        textAlign(CENTER);
+
+        textSize(100);
+        text("Pause", game.centerX,game.centerY-height/4);
+
+        textSize(25);
+        text("Press ESC to resume", game.centerX,game.centerY-height/4+100);
+    }
+
+    //Game Over Screen
+    if(game.isAlive === false){
+        fill(0,0,0,200);
+        rect(0,0,width);
+
+        fill(255);
+
+        textAlign(CENTER);
+
+        textSize(100);
+        text("u ded", game.centerX,game.centerY-height/4);
+
+        textSize(25);
+        text("Press ESC to restart", game.centerX,game.centerY-height/4+100);
+    }
+
+
+
+
+
+
+
+
+    //debug circles
 
     if(game.debug.enabled){
-    fill(255,0,0);
-    circle(game.centerX,game.centerY,10);
+        fill(255,0,0);
+        circle(game.centerX,game.centerY,10);
 
-    fill(0,255,0);
-    circle(game.centerX-width/4 ,game.centerY,10);
+        fill(0,255,0);
+        circle(game.centerX-width/4 ,game.centerY,10);
 
-    fill(0,0,255);
-    circle(game.centerX+width/4 ,game.centerY,10);
+        fill(0,0,255);
+        circle(game.centerX+width/4 ,game.centerY,10);
     }
 
-}
 
-
-function keyPressed(){
-    if(game.isAlive===true){
-        if(key === "w"){
-            player.leftLane();
-        }
-
-        if(key === "s"){
-            player.rightLane();
-        }
-    }
 }
