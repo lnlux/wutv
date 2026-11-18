@@ -2,6 +2,7 @@ let game = {
         isPaused: false,
         isAlive: true,
         score:0,
+        money:100000,
 
         pauseColor:0,
 
@@ -15,7 +16,9 @@ let game = {
         },
 
         debug: {
-            enabled: true,
+            enabled: false,
+            autoLane: true,
+            godMode: false,
 
             enemyLane:"if your reading this, something went terribly wrong",
         },
@@ -33,7 +36,7 @@ let game = {
 };
 
 let road = {
-    width: 230,
+    width: 150,
     
     line: {
         x:0
@@ -41,6 +44,13 @@ let road = {
 };
 
 let player = {
+
+    engine: {
+        rpm:0,
+        maxRpm:3000,
+        power:10,
+        fuel:100
+    },
     
     transform: {
         x: 50,      //Distance from left edge in px
@@ -54,6 +64,7 @@ let player = {
         turnSpeed: 0.5,
         acceleration:0.001,
 
+        currentAction:"none", //"accel", "braking"
 
         speedPrevFrame:0,
         GforceNowX:0,
@@ -81,6 +92,10 @@ let player = {
 };
 
 let enemy = {
+
+    appearance: {
+        
+    },
     
     transform: {
         x: 50,      //Distance from RIGHT edge in px AFTER Setup()
@@ -103,6 +118,8 @@ let enemy = {
         this.transform.lane = 0;
         
         this.transform.y = game.centerY-road.width/2;
+
+        if(game.debug.autoLane && game.debug.enabled){player.rightLane();}
     },
 
     rightLane() {
@@ -110,7 +127,52 @@ let enemy = {
         this.transform.lane = 1;
     
         this.transform.y = game.centerY+road.width/2;
+
+        if(game.debug.autoLane && game.debug.enabled){player.leftLane();}
     }
+};
+
+let shop = {
+    visible:false,
+
+    items: {
+        fuel: {
+            cost:40,
+            amount:50
+        },
+
+        rpm: {
+            cost:150,
+            amount:500
+        },
+
+        power: {
+            cost:400,
+            amount:5
+        },
+
+
+    },
+
+    buy: {
+        fuel(){
+            if(game.money > this.items.fuel.cost){
+                game.money - this.items.fuel.cost;
+                player.engine.fuel += this.items.fuel.amount;
+            }
+        },
+
+        rpm(){
+            game.money - this.items.rpm.cost;
+            player.engine.maxRpm += this.items.rpm.amount;
+        },
+
+        power(){
+            game.money - this.items.power.cost;
+            player.engine.power += this.items.power.amount;
+        },
+    }
+
 };
 
 function setup(){
@@ -136,7 +198,12 @@ function reset(){
     game.isPaused=false;
 
     game.score=0;
+    game.money=0;
     game.camera.xOffset=0;
+
+    player.engine.fuel=100;
+    player.engine.maxRpm=3000;
+    player.engine.power=10;
 
     road.line.x=0;
 
@@ -145,43 +212,84 @@ function reset(){
     enemy.leftLane();
 
     player.movement.speed=0;
+    player.engine.rpm=0;
 
-    enemy.speed=0;
+    enemy.movement.speed=0;
     enemy.transform.x = width - 50 - enemy.transform.width;
     
 }
 
 function keyPressed(){
-    
+
+    //Pause / Restart
     if(key === ESCAPE){
         if(game.isAlive===true){
             game.pause();
         }else{reset();}
     }
 
-
+    //Change Langes
     if(game.isAlive===true && game.isPaused===false){
-        if(key === "w"){
+        if(key === "w" || key === "W"){
             player.leftLane();
         }
 
-        if(key === "s"){
+        if(key === "s" || key === "S"){
             player.rightLane();
         }   
     }
+
+    //Shop
+    //Number keys for shop item
+    if(shop.visible){
+        if(key==="1"){
+            shop.buy.fuel();
+        }
+
+        if(key==="2"){
+            shop.buy.rpm();
+        }
+
+        if(key==="3"){
+            shop.buy.power();
+        }
+    }
+
+
 }
 
 
 function draw(){
 
 
-    player.movement.speedPrevFrame=player.movement.speed;
+    //Engine
+    //RPM calc
+    if(player.engine.fuel>1){
+        if(player.movement.currentAction === "accel"){
+            player.engine.rpm = constrain(player.engine.rpm+player.engine.power,0,player.engine.maxRpm);
+        }
+    }
+
+    if(player.movement.currentAction === "none"){
+        player.engine.rpm = constrain(player.engine.rpm-player.engine.power/1.5,0,player.engine.maxRpm);    
+    }
+
+    if(player.movement.currentAction === "brake"){
+        player.engine.rpm = constrain(player.engine.rpm-player.engine.power*2,0,player.engine.maxRpm);    
+    }
+
+    if(player.movement.currentAction === "handbrake"){
+        player.engine.rpm = constrain(player.engine.rpm-player.engine.power*10,0,player.engine.maxRpm);  
+    }
+
+    if(player.engine.rpm > player.engine.maxRpm){
+        player.engine.rpm = player.engine.maxRpm;
+    }
+
 
     //Distance from enemy to player
 
     game.distanceToEnemy = dist(enemy.transform.x,enemy.transform.y,player.transform.x,player.transform.y);
-    
-
 
     //Collision
 
@@ -244,7 +352,10 @@ function draw(){
         }
 
         //Move Forward  -   Enemy Spawning
-        if(enemy.transform.x <= 0-enemy.transform.width*2){
+        if(enemy.transform.x <= 0-enemy.transform.width+5){
+
+            game.money += player.movement.speed;
+
             enemy.transform.x = width*2;
 
             if(random(0, 1) <= 0.5){
@@ -256,28 +367,26 @@ function draw(){
 
     }
 
+    //Input WASD    -   Player Speed Stuff
 
-
-    //Input WASD
-
-    //
-    //  Lies in KeyPressed() Function
+    //  W and S
+    //  is in KeyPressed() Function
     //  
-    //  W,S
-    //
-    //
     if(game.isAlive==true && game.isPaused == false){
-        if(keyIsDown("d")){
-            player.movement.speed += player.movement.acceleration * deltaTime;
+        if(keyIsDown("d") || keyIsDown("D")){
+            player.movement.currentAction="accel";
+            player.engine.fuel-=deltaTime/1000  *   player.engine.rpm / player.engine.maxRpm;
+        }else if(keyIsDown("a") || keyIsDown("S")){
+            player.movement.currentAction="brake";
+            player.movement.speed *= 0.95-player.engine.power/100;
+        }else if(keyIsDown(" ")){
+            player.movement.currentAction="handbrake";
+            player.movement.speed *= 0.9 - player.engine.power/80; 
+        }else {
+            player.movement.currentAction="none";
         }
 
-        if(keyIsDown("a")){
-            player.movement.speed -= player.movement.acceleration * deltaTime;
-        }
-
-        if(keyIsDown(" ")){
-            player.movement.speed *= 0.9;
-        }
+        player.movement.speed = (player.engine.rpm * player.engine.power) / 10000;
     }
 
 
@@ -309,11 +418,11 @@ function draw(){
     noStroke();
 
     // Player
-    fill(40, 85, 180);
+    fill(40+ player.engine.rpm/player.engine.maxRpm*200, 85-player.engine.rpm/player.engine.maxRpm*80, 180-player.engine.rpm/player.engine.maxRpm*170);
     rect(player.transform.x  +game.camera.xOffset, player.transform.y - player.transform.height / 2, player.transform.width, player.transform.height);
 
     // Passing Car
-    fill(180, 10, 50);
+    fill(255,200,100)
     rect(enemy.transform.x   +game.camera.xOffset, enemy.transform.y - enemy.transform.height / 2, enemy.transform.width, enemy.transform.height);
 
     textAlign(CENTER);
@@ -328,22 +437,145 @@ function draw(){
     textAlign(LEFT);
 
     //Speed
+    textAlign(CENTER)
     fill(255);
-    textSize(20);
-    text("Speed: " + round(player.movement.speed, 1), 20,40);
+    textSize(15);
+    text("Speed", game.centerX-150,30);
+    textSize(30);
+    text(round(player.movement.speed,1),    game.centerX-120,80);
+
+    //RPM
+    textAlign(CENTER)
+    fill(255);
+    textSize(15);
+    text("RPM", game.centerX+150,30);
+    textSize(30);
+    text(round(player.engine.rpm),    game.centerX+120,80);
+
+    //Fuel
+    textAlign(CENTER)
+    fill(255);
+    textSize(15);
+    text("Fuel", game.centerX,150);
+    textSize(30);
+    text(round(player.engine.fuel,2),    game.centerX,180);
+
+        //Money
+        textAlign(LEFT);
+        fill(155,255,155);
+        textSize(20);
+        text("Money: " + round(game.money), 20,40);
+
+
+
+
+
+    //SHOP
+
+    if(player.movement.speed<0.01 && game.isAlive && game.isPaused === false){shop.visible=true} else{shop.visible=false}
+    if(shop.visible){
+
+        /*
+            Shop dimensions
+
+            Width: 500
+            Height: 400
+        
+        */
+
+        fill(0,225);
+        rect(game.centerX-250,game.centerY-200,500,400);
+
+        fill(255);
+        textSize(30);
+        textStyle(ITALIC);
+        textAlign(CENTER);
+        text("Shop",game.centerX,game.centerY-160);
+
+        /*
+
+        Add:
+
+        RPM Limit upgrade
+        Fuel
+        Power Upgrade   
+
+        */
+
+        
+        textSize(17);
+        textStyle(NORMAL);
+
+        //Fuel
+        
+        if(game.money>shop.items.fuel.cost){fill(255);}else{fill(55);}
+        textAlign(LEFT);
+        text("1. Fuel " + shop.items.fuel.amount + "L",game.centerX-200,game.centerY-100);
+        textAlign(RIGHT);
+        text("$" + shop.items.fuel.cost, game.centerX+   200,game.centerY-100)
+        
+
+        //RPM
+
+        if(game.money>shop.items.rpm.cost){fill(255);}else{fill(55);}
+
+        textAlign(LEFT)
+        text("2. Higher RPM +" + shop.items.rpm.amount,game.centerX-200,game.centerY-80);
+        textAlign(RIGHT);
+        text("$" + shop.items.rpm.cost, game.centerX+   200,game.centerY-80)
+
+
+        //Power
+
+        if(game.money>shop.items.power.cost){fill(255);}else{fill(55);}
+
+        textAlign(LEFT);
+        text("3. Power +" + shop.items.power.amount,game.centerX-200,game.centerY-60);
+        textAlign(RIGHT);
+        text("$" + shop.items.power.cost, game.centerX+   200,game.centerY-60)
+        
+
+
+
+
+        //Money
+        textAlign(LEFT);
+        fill(155,255,155);
+        textSize(20);
+        text("$" + round(game.money), game.centerX-220,game.centerY-160);
+
+
+
+
+
+        textAlign(CENTER);
+        fill(255);
+        textSize(15);
+        text("- Shop is open when you are stationary -",game.centerX,game.centerY+190);
+
+
+
+
+
+
+    }
 
     //debug text
     if(game.debug.enabled){
-    fill(255,255,0)
-    textSize(40);
-    textAlign(RIGHT);
-    text("DEBUG",width-40,80);
-    textSize(20);
-    text("Enemy Lane: " + game.debug.enemyLane, width-225, 80);
-    text("Distance to enemy: " + round(game.distanceToEnemy), width-225, 100);
-    text("Enemy Braking " + enemy.movement.isBraking, width-225, 120);
-    text("deltaTime: " + round(deltaTime,1), width-225,140);
-    
+        fill(255,255,0)
+        textSize(40);
+        textAlign(RIGHT);
+        text("DEBUG",width-40,80);
+        textSize(20);
+        text("Enemy Lane: " + game.debug.enemyLane, width-225, 80);
+        text("Distance to enemy: " + round(game.distanceToEnemy), width-225, 100);
+        text("Enemy Braking " + enemy.movement.isBraking, width-225, 120);
+        text("deltaTime: " + round(deltaTime,1), width-225,140);
+        text("Engine RPM: " + round(player.engine.rpm), width-225,160);
+        text("Engine Power: " + round(player.engine.power), width-225,180);
+        text("Car Fuel: " + round(player.engine.fuel), width-225,200);
+        text("PlayerAction: " + player.movement.currentAction, width-225,220);
+        
     
     }
 
@@ -394,7 +626,7 @@ function draw(){
 
     //debug circles
 
-    if(game.debug.enabled){
+    /*if(game.debug.enabled){
         fill(255,0,0);
         circle(game.centerX,game.centerY,10);
 
@@ -403,7 +635,7 @@ function draw(){
 
         fill(0,0,255);
         circle(game.centerX+width/4 ,game.centerY,10);
+        }
+    */
     }
-
-
-}
+        
