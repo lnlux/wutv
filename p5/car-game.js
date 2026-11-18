@@ -1,5 +1,5 @@
 let game = {
-        inGame: true,
+        isPaused: false,
         isAlive: true,
         score:0,
 
@@ -19,6 +19,17 @@ let game = {
 
             enemyLane:"if your reading this, something went terribly wrong",
         },
+
+        pause(){
+            switch(this.isPaused){
+                case true:
+                    this.isPaused=false;
+                    break;
+                case false:
+                    this.isPaused=true;
+                    break;
+            }   
+        }
 };
 
 let road = {
@@ -122,7 +133,7 @@ function setup(){
 
 function reset(){
     game.isAlive=true;
-    game.inGame=true;
+    game.isPaused=false;
 
     game.score=0;
     game.camera.xOffset=0;
@@ -131,6 +142,7 @@ function reset(){
 
     player.transform.x=50;
     player.rightLane();
+    enemy.leftLane();
 
     player.movement.speed=0;
 
@@ -142,18 +154,20 @@ function reset(){
 function keyPressed(){
     
     if(key === ESCAPE){
-            reset();
+        if(game.isAlive===true){
+            game.pause();
+        }else{reset();}
     }
 
 
-    if(game.isAlive===true && game.inGame===true){
+    if(game.isAlive===true && game.isPaused===false){
         if(key === "w"){
             player.leftLane();
         }
 
         if(key === "s"){
             player.rightLane();
-        }
+        }   
     }
 }
 
@@ -187,7 +201,7 @@ function draw(){
 
     
     // Basic Enemy A.I
-    if(game.inGame){
+    if(game.isPaused===false){
         if (
             player.transform.lane === enemy.transform.lane &&
             game.distanceToEnemy < 1000 &&
@@ -212,7 +226,7 @@ function draw(){
 
 
     //Move Forward
-    if(game.inGame){
+    if(game.isPaused===false){
 
         if(player.movement.speed>0){
             game.score += player.movement.speed;
@@ -252,7 +266,7 @@ function draw(){
     //  W,S
     //
     //
-    if(game.isAlive==true && game.inGame == true){
+    if(game.isAlive==true && game.isPaused == false){
         if(keyIsDown("d")){
             player.movement.speed += player.movement.acceleration * deltaTime;
         }
@@ -302,17 +316,21 @@ function draw(){
     fill(180, 10, 50);
     rect(enemy.transform.x   +game.camera.xOffset, enemy.transform.y - enemy.transform.height / 2, enemy.transform.width, enemy.transform.height);
 
-    textAlign(LEFT);
+    textAlign(CENTER);
 
     //Score
     fill(255);
     textSize(20);
-    text("Score: " + round(game.score), 20,40);
+    text("Score", game.centerX,40);
+    textSize(50);
+    text(round(game.score), game.centerX,100);
+
+    textAlign(LEFT);
 
     //Speed
     fill(255);
     textSize(20);
-    text("Speed: " + round(player.movement.speed, 1), 20,80);
+    text("Speed: " + round(player.movement.speed, 1), 20,40);
 
     //debug text
     if(game.debug.enabled){
@@ -324,6 +342,7 @@ function draw(){
     text("Enemy Lane: " + game.debug.enemyLane, width-225, 80);
     text("Distance to enemy: " + round(game.distanceToEnemy), width-225, 100);
     text("Enemy Braking " + enemy.movement.isBraking, width-225, 120);
+    text("deltaTime: " + round(deltaTime,1), width-225,140);
     
     
     }
@@ -334,7 +353,7 @@ function draw(){
 
 
     //PAUSE
-    if(game.inGame===false && game.isAlive){
+    if(game.isPaused===true && game.isAlive){
         fill(0,0,0,200);
         rect(0,0,width);
 
@@ -359,10 +378,11 @@ function draw(){
         textAlign(CENTER);
 
         textSize(100);
-        text("u ded", game.centerX,game.centerY-height/4);
+        text("gg", game.centerX,game.centerY-height/4);
 
         textSize(25);
-        text("Press ESC to restart", game.centerX,game.centerY-height/4+100);
+        text("Score: " + round(game.score), game.centerX,game.centerY-height/4+100);
+        text("Press ESC to restart", game.centerX,game.centerY-height/4+500);
     }
 
 
