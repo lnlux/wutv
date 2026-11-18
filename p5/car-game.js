@@ -16,7 +16,7 @@ let game = {
         },
 
         debug: {
-            enabled: false,
+            enabled: true,
             autoLane: true,
             godMode: false,
 
@@ -46,6 +46,7 @@ let road = {
 let player = {
 
     engine: {
+        slow:0,
         rpm:0,
         maxRpm:3000,
         power:10,
@@ -156,20 +157,20 @@ let shop = {
 
     buy: {
         fuel(){
-            if(game.money > this.items.fuel.cost){
-                game.money - this.items.fuel.cost;
-                player.engine.fuel += this.items.fuel.amount;
+            if(game.money > shop.items.fuel.cost){
+                game.money -= shop.items.fuel.cost;
+                player.engine.fuel += shop.items.fuel.amount;
             }
         },
 
         rpm(){
-            game.money - this.items.rpm.cost;
-            player.engine.maxRpm += this.items.rpm.amount;
+            game.money -= shop.items.rpm.cost;
+            player.engine.maxRpm += shop.items.rpm.amount;
         },
 
         power(){
-            game.money - this.items.power.cost;
-            player.engine.power += this.items.power.amount;
+            game.money -= shop.items.power.cost;
+            player.engine.power += shop.items.power.amount;
         },
     }
 
@@ -233,7 +234,6 @@ function keyPressed(){
         if(key === "w" || key === "W"){
             player.leftLane();
         }
-
         if(key === "s" || key === "S"){
             player.rightLane();
         }   
@@ -264,10 +264,8 @@ function draw(){
 
     //Engine
     //RPM calc
-    if(player.engine.fuel>1){
-        if(player.movement.currentAction === "accel"){
-            player.engine.rpm = constrain(player.engine.rpm+player.engine.power,0,player.engine.maxRpm);
-        }
+    if(player.movement.currentAction === "accel"){
+        player.engine.rpm = constrain(player.engine.rpm+player.engine.power,0,player.engine.maxRpm);
     }
 
     if(player.movement.currentAction === "none"){
@@ -508,7 +506,7 @@ function draw(){
 
         //Fuel
         
-        if(game.money>shop.items.fuel.cost){fill(255);}else{fill(55);}
+        if(game.money>=shop.items.fuel.cost){fill(255);}else{fill(55);}
         textAlign(LEFT);
         text("1. Fuel " + shop.items.fuel.amount + "L",game.centerX-200,game.centerY-100);
         textAlign(RIGHT);
@@ -517,7 +515,7 @@ function draw(){
 
         //RPM
 
-        if(game.money>shop.items.rpm.cost){fill(255);}else{fill(55);}
+        if(game.money>=shop.items.rpm.cost){fill(255);}else{fill(55);}
 
         textAlign(LEFT)
         text("2. Higher RPM +" + shop.items.rpm.amount,game.centerX-200,game.centerY-80);
@@ -527,7 +525,7 @@ function draw(){
 
         //Power
 
-        if(game.money>shop.items.power.cost){fill(255);}else{fill(55);}
+        if(game.money>=shop.items.power.cost){fill(255);}else{fill(55);}
 
         textAlign(LEFT);
         text("3. Power +" + shop.items.power.amount,game.centerX-200,game.centerY-60);
@@ -616,13 +614,6 @@ function draw(){
         text("Score: " + round(game.score), game.centerX,game.centerY-height/4+100);
         text("Press ESC to restart", game.centerX,game.centerY-height/4+500);
     }
-
-
-
-
-
-
-
 
     //debug circles
 
