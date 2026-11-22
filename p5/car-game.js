@@ -2,7 +2,7 @@ let game = {
         isPaused: false,
         isAlive: true,
         score:0,
-        money:100000,
+        money:0,
 
         pauseColor:0,
 
@@ -16,7 +16,7 @@ let game = {
         },
 
         debug: {
-            enabled: true,
+            enabled: false,
             autoLane: true,
             godMode: false,
 
@@ -139,17 +139,17 @@ let shop = {
     items: {
         fuel: {
             cost:40,
-            amount:50
+            amount:20
         },
 
         rpm: {
             cost:150,
-            amount:500
+            amount:300
         },
 
         power: {
             cost:400,
-            amount:5
+            amount:2
         },
 
 
@@ -430,7 +430,7 @@ function draw(){
     textSize(20);
     text("Score", game.centerX,40);
     textSize(50);
-    text(round(game.score), game.centerX,100);
+    text(round(game.score/10) + " m", game.centerX,100);
 
     textAlign(LEFT);
 
@@ -438,17 +438,17 @@ function draw(){
     textAlign(CENTER)
     fill(255);
     textSize(15);
-    text("Speed", game.centerX-150,30);
+    text("Speed", game.centerX-200,30);
     textSize(30);
-    text(round(player.movement.speed,1),    game.centerX-120,80);
+    text(round(player.movement.speed,1),    game.centerX-170,80);
 
     //RPM
     textAlign(CENTER)
     fill(255);
     textSize(15);
-    text("RPM", game.centerX+150,30);
+    text("RPM", game.centerX+200,30);
     textSize(30);
-    text(round(player.engine.rpm),    game.centerX+120,80);
+    text(round(player.engine.rpm),    game.centerX+170,80);
 
     //Fuel
     textAlign(CENTER)
@@ -458,11 +458,11 @@ function draw(){
     textSize(30);
     text(round(player.engine.fuel,2),    game.centerX,180);
 
-        //Money
-        textAlign(LEFT);
-        fill(155,255,155);
-        textSize(20);
-        text("Money: " + round(game.money), 20,40);
+    //Money
+    textAlign(LEFT);
+    fill(155,255,155);
+    textSize(20);
+    text("Money: " + round(game.money), 20,40);
 
 
 
@@ -521,7 +521,7 @@ function draw(){
         text("2. Higher RPM +" + shop.items.rpm.amount,game.centerX-200,game.centerY-80);
         textAlign(RIGHT);
         text("$" + shop.items.rpm.cost, game.centerX+   200,game.centerY-80)
-
+        
 
         //Power
 
