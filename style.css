@@ -10,10 +10,24 @@ iframe{
     border-radius: 1rem;
 }
 
+html{
+    height: 100%;
+}
+
 body{
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgb(10,14,15);
+    display: flex;
+    flex-direction: column;
+    min-height:100dvh;
     margin:0;
+    overflow-x:scroll;
+    overflow-y:scroll;
+}
+
+main{
+    flex: 1;
+    transition: 0.5s;
 }
 
 h1,h2,h3,h4,h5,h6,p,li{
@@ -30,14 +44,20 @@ h1,h2,h3,h4,h5,h6,p,li{
 }
 
 header{
+    position: sticky;
+
+    z-index: 1000;
+
+    top: 1rem;
     margin: 1rem;
     /*background: linear-gradient(rgba(56, 19, 47, 0.6) 0%,rgba(56,54,60,0) 100%);*/
-    background-color: rgba(0,0,0,0.25);
+    background-color: rgba(0,0,0,0.5);
     padding-top: 0rem;
     padding-bottom: 0rem;
     padding: 0.5rem;
 
-    filter:drop-shadow(0rem 1rem 3rem rgba(223, 44, 92, 0.1));
+    filter:drop-shadow(0rem 1rem 3rem rgba(0, 0, 0, 0.1));
+    backdrop-filter: blur(5rem);
 
     border: rgba(255,255,255,0) solid 1px;
 
@@ -54,13 +74,38 @@ header:hover{
     /*background: linear-gradient(rgba(56, 19, 47, 1) 0%,rgba(56,54,60,0.8) 90%, rgba(56,54,60,0.0) 100%);*/
     background-color: rgb(12, 12, 12,0.99);
 
+    backdrop-filter: blur(10rem);
+
+    
+
     padding: 2rem;
 
-    border-radius: 2rem;
+    margin-top: 0rem;
 
-    border: rgba(255,255,255,1) solid 1px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 
-    filter:drop-shadow(0rem 1rem 10rem rgb(91, 90, 90));
+    top:0;
+
+    border-top-left-radius: 0rem;
+    border-top-right-radius: 0rem;
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+
+    /*border: rgba(255,255,255,1) solid 1px;*/
+
+    filter:drop-shadow(0rem 1rem 10rem rgb(0, 0, 0));
+}
+
+header:hover ~ main{
+    filter:blur(1rem) brightness(0.5);
+    transform: scale(0.8);
+    opacity: 0.5;
+}
+
+header:hover ~ footer{
+    filter:blur(1rem);
+    opacity: 0;
 }
 
 header:hover .navbar .navbar-item{
@@ -104,7 +149,7 @@ header:hover .navbar .navbar-item{
 
     cursor: pointer;
 
-    transition:0.3s;
+    transition:0.1s;
 
     border-radius: 1rem;
     border: rgba(255,255,255,0.1) solid;
@@ -112,6 +157,7 @@ header:hover .navbar .navbar-item{
 
 .navbar-block:hover{
     border: rgba(255,255,255,1) solid;
+    transform: scale(1.2);
     filter:drop-shadow(0 0 1rem white);
 }
 
@@ -237,12 +283,13 @@ section{
 }
 
 footer{
-    background: linear-gradient(rgba(0, 0, 0, 0),rgb(0, 0, 0) 5rem);
-    width: 100%;
-    padding-top: 5rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    height: 100%;
+    padding-left:2rem;
+    padding-right:2rem;
+    padding-top:10dvh;
+    padding-bottom:5rem;
+    background: linear-gradient(rgba(0, 0, 0, 0),rgb(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 1) 100%);
+    width: 100dvw;
+    transition: 0.5s;
 }
 
 .footer-text-box{
@@ -303,7 +350,10 @@ footer{
     transform: scale(2);    
 }
 
+#andrew-dingus{
+    color: rgba(255, 255, 255, 0.247);
+}
 
-
-
-
+.meme-quote{
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
