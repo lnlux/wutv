@@ -12,29 +12,34 @@
          <div class="flex-container-row">
             <h1 class="header-title">Lucas, WUTV</h1>
             <ul class="navbar">
-                <li class="navbar-item" onclick="window.location.href='index.html'" ><div class="navbar-block"><p>Index</p></div></li>
-                <li class="navbar-item" onclick="window.location.href='om-mig.html'" ><div class="navbar-block"><p>Om Mig</p></div></li>
-                <li class="navbar-item" onclick="window.location.href='recept.html'" ><div class="navbar-block"><p>Recept</p></div></li>
-                <li class="navbar-item" onclick="window.location.href='avstamning-1.html'" ><div class="navbar-block"><p>Öppet Hus</p></div></li>
-                <li class="navbar-item" onclick="window.location.href='/p5'" ><div class="navbar-block"><p>Spel</p></div></li>
-                <li class="navbar-item" onclick="window.location.href='/experimental    '" ><div class="navbar-block"><p>Experimental</p></div></li>
+                <a class="navbar-item" href="index.html" ><div class="navbar-block"><p>Index</p></div></a>
+                <a class="navbar-item" href="om-mig.html" ><div class="navbar-block"><p>Om Mig</p></div></a>
+                <a class="navbar-item" href="recept.html" ><div class="navbar-block"><p>Recept</p></div></a>
+                <a class="navbar-item" href="avstamning-1.html" ><div class="navbar-block"><p>Öppet Hus</p></div></a>
+                <a class="navbar-item" href="/p5" ><div class="navbar-block"><p>Spel</p></div></a>
+                <a class="navbar-item" href="/experimental" ><div class="navbar-block"><p>Experimental</p></div></a>
             </ul>
         </div>
     </header>
-    <section>
-        <h2>Information om mig</h2>
-        <p>Välkommen till min webbsida! Här kan du hitta information om mig och mina intressen.</p> 
-    </section>
+    
     <main>
         <section>
-            <p>Mina Intressen</p>
+            <h2>Information om mig</h2>
+            <p>skriv något <i>smart</i> här.</p> 
+        </section>
+        <section>
+            <h3>Mina Intressen</h3>
             <ul>
                 <li>Musikproduktion</li>
                 <li>Gaming</li>
-                <li>Spela instrument</li>
+                <li>Gitarrer / Spela Gitarr</li>
+                <li>Datorer / Teknik</li>
+                <li>Programmering</li>
+                <li>Linux</li>
             </ul>
         </section>
         <section>
+            <h2>Bilder på mina intressen</h2>
             <div class="image-container">
                 <img src="./images/towerofaudio.jpg" class="image" alt="Ljudutrustning på ett skrivbord">
                 <img src="./images/messy-setup.jpg" class="image" alt="En dator setup med en mikrofon, en skärm och en dator">
@@ -48,20 +53,33 @@
                 <img src="./images/fender-stratocaster.webp" class="image" alt="En Fender Stratocaster gitarr, liggandes på ett golv">
             </div>
         </section>
-
-    <div class="container">
-        <div class="card">
-            <h2>Card</h2>
-            <p>This is a card, belive it or not.</p>
-        </div>
-    </div>
-	<p>Skolan jag går på är <a href="https://ntig.se" target="about:blank">NTI Gymnasiet.</a>
+        <section>
+            <div class="container">
+                <div class="card">
+                    <h2>Card</h2>
+                    <p>This is a card, belive it or not.</p>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h3>Saker som jag <strong>inte</strong> gillar</h3>
+        </section>
+        <section>
+            <h2>Övrig information</h2>
+            <p>Skolan jag går på är <a href="https://ntig.se" target="about:blank">NTI Gymnasiet.</a>
+        </section>
     </main>
 
 
     <footer>
-        
-        <p>Lucas Nordin Lundahl</p>
+        <div class="footer-text-box">
+            <h4>Footer</h4>
+            <p>This is not good!</p>
+            <p>I think this is the end!</p>
+            <a class="github-repo-container" href="https://github.com/lnlux/wutv">
+                <p>GitHub</p><img src="../icons/github.png" class="github-icon">
+            </a>
+        </div>
     </footer>
     
 </body>
