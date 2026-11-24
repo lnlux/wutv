@@ -1,3 +1,7 @@
-*p5*.js linguist-vendored
-*p5*.min.js linguist-vendored
-p5*.js.map linguist-vendored
+# Ignore everything inside your p5/libaries folder (including sound and addons)
+p5/libaries/** linguist-vendored
+
+# Backup catch-alls in case of spelling variations or other subfolders
+p5/libraries/** linguist-vendored
+**/*p5*.js linguist-vendored
+**/*p5*.d.ts linguist-vendored
