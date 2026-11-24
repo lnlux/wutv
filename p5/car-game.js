@@ -16,7 +16,7 @@ let game = {
         },
 
         debug: {
-            enabled: false,
+            enabled: true,
             autoLane: true,
             godMode: false,
 
@@ -214,7 +214,7 @@ function reset(){
 
     player.movement.speed=0;
     player.engine.rpm=0;
-
+    
     enemy.movement.speed=0;
     enemy.transform.x = width - 50 - enemy.transform.width;
     
@@ -370,7 +370,7 @@ function draw(){
     //  W and S
     //  is in KeyPressed() Function
     //  
-    if(game.isAlive==true && game.isPaused == false){
+    if(game.isAlive===true && game.isPaused === false){
         if(keyIsDown("d") || keyIsDown("D")){
             player.movement.currentAction="accel";
             player.engine.fuel-=deltaTime/1000  *   player.engine.rpm / player.engine.maxRpm;
@@ -576,8 +576,6 @@ function draw(){
         
     
     }
-
-
 
 
 
