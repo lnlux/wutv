@@ -7,6 +7,8 @@ let game = {
         pauseColor:0,
 
         distanceToEnemy: 0,
+        distanceToEnemy2: 0,
+        distanceToEnemy3: 0,
 
         centerX: 0, //  width / 2
         centerY: 0,  //  height / 2
@@ -16,7 +18,7 @@ let game = {
         },
 
         debug: {
-            enabled: true,
+            enabled: false,
             autoLane: true,
             godMode: false,
 
@@ -133,6 +135,88 @@ let enemy = {
     }
 };
 
+let enemy2 = {
+
+    appearance: {
+        
+    },
+    
+    transform: {
+        x: -100,      //Distance from RIGHT edge in px AFTER Setup()
+        y: 0,       //Going to be centered in Setup()
+        height: 90, 
+        width: 120,
+        lane: 0,
+    },
+
+    movement: {     // No function
+        turnSpeed: 0.5,
+        targetSpeed:8,
+        speed:0,
+        acceleration:0.025,
+        isBraking:0
+    },
+
+    leftLane() {
+        game.debug.enemyLane = "Left";  //debug info
+        this.transform.lane = 0;
+        
+        this.transform.y = game.centerY-road.width/2;
+
+        if(game.debug.autoLane && game.debug.enabled){player.rightLane();}
+    },
+
+    rightLane() {
+        game.debug.enemyLane = "Right";  //debug info
+        this.transform.lane = 1;
+    
+        this.transform.y = game.centerY+road.width/2;
+
+        if(game.debug.autoLane && game.debug.enabled){player.leftLane();}
+    }
+};
+
+let enemy3 = {
+
+    appearance: {
+        
+    },
+    
+    transform: {
+        x: -500,      //Distance from RIGHT edge in px AFTER Setup()
+        y: 0,       //Going to be centered in Setup()
+        height: 90, 
+        width: 120,
+        lane: 0,
+    },
+
+    movement: {     // No function
+        turnSpeed: 0.5,
+        targetSpeed:8,
+        speed:0,
+        acceleration:0.025,
+        isBraking:0
+    },
+
+    leftLane() {
+        game.debug.enemyLane = "Left";  //debug info
+        this.transform.lane = 0;
+        
+        this.transform.y = game.centerY-road.width/2;
+
+        if(game.debug.autoLane && game.debug.enabled){player.rightLane();}
+    },
+
+    rightLane() {
+        game.debug.enemyLane = "Right";  //debug info
+        this.transform.lane = 1;
+    
+        this.transform.y = game.centerY+road.width/2;
+
+        if(game.debug.autoLane && game.debug.enabled){player.leftLane();}
+    }
+};
+
 let shop = {
     visible:false,
 
@@ -186,11 +270,17 @@ function setup(){
     player.transform.y = game.centerY;
 
     enemy.transform.x = width - enemy.transform.x - enemy.transform.width;
+    enemy2.transform.x = width - enemy2.transform.x - enemy2.transform.width;
+    enemy3.transform.x = width - enemy3.transform.x - enemy3.transform.width;
 
     enemy.transform.y = game.centerY;
+    enemy2.transform.y = game.centerY;
+    enemy3.transform.y = game.centerY;
 
     player.rightLane();
     enemy.leftLane();
+    enemy2.leftLane();
+    enemy3.leftLane();
 }
 
 
@@ -211,12 +301,20 @@ function reset(){
     player.transform.x=50;
     player.rightLane();
     enemy.leftLane();
+    enemy2.leftLane();
+    enemy3.leftLane();
 
     player.movement.speed=0;
     player.engine.rpm=0;
     
     enemy.movement.speed=0;
     enemy.transform.x = width - 50 - enemy.transform.width;
+
+    enemy2.movement.speed=0;
+    enemy2.transform.x = width - 50 - enemy2.transform.width;
+
+    enemy3.movement.speed=0;
+    enemy3.transform.x = width - 50 - enemy3.transform.width;
     
 }
 
@@ -229,7 +327,7 @@ function keyPressed(){
         }else{reset();}
     }
 
-    //Change Langes
+    //Change Lanes
     if(game.isAlive===true && game.isPaused===false){
         if(key === "w" || key === "W"){
             player.leftLane();
@@ -257,6 +355,15 @@ function keyPressed(){
 
 
 }
+
+// Source - https://stackoverflow.com/a/40603078
+// Posted by Rob M.
+// Retrieved 2026-11-25, License - CC BY-SA 3.0
+
+function minimum3(num1, num2, num3) {
+    return Math.min(num1, num2, num3);
+}
+
 
 
 function draw(){
@@ -288,12 +395,29 @@ function draw(){
     //Distance from enemy to player
 
     game.distanceToEnemy = dist(enemy.transform.x,enemy.transform.y,player.transform.x,player.transform.y);
+    game.distanceToEnemy2 = dist(enemy2.transform.x,enemy2.transform.y,player.transform.x,player.transform.y);
+    game.distanceToEnemy3 = dist(enemy3.transform.x,enemy3.transform.y,player.transform.x,player.transform.y);
+    
 
     //Collision
 
     if(player.transform.lane === enemy.transform.lane && game.distanceToEnemy < player.transform.width/2 + enemy.transform.width/2 && enemy.transform.x > player.transform.x){
         enemy.transform.x=player.transform.x+player.transform.width;
         enemy.movement.speed=-player.movement.speed*2;
+        player.movement.speed=-0.05;
+        game.isAlive=false;
+    }
+
+    if(player.transform.lane === enemy2.transform.lane && game.distanceToEnemy2 < player.transform.width/2 + enemy2.transform.width/2 && enemy2.transform.x > player.transform.x){
+        enemy2.transform.x=player.transform.x+player.transform.width;
+        enemy2.movement.speed=-player.movement.speed*2;
+        player.movement.speed=-0.05;
+        game.isAlive=false;
+    }
+
+    if(player.transform.lane === enemy3.transform.lane && game.distanceToEnemy3 < player.transform.width/2 + enemy3.transform.width/2 && enemy3.transform.x > player.transform.x){
+        enemy3.transform.x=player.transform.x+player.transform.width;
+        enemy3.movement.speed=-player.movement.speed*2;
         player.movement.speed=-0.05;
         game.isAlive=false;
     }
@@ -308,6 +432,8 @@ function draw(){
     
     // Basic Enemy A.I
     if(game.isPaused===false){
+
+        //Enemy 1
         if (
             player.transform.lane === enemy.transform.lane &&
             game.distanceToEnemy < 1000 &&
@@ -317,10 +443,42 @@ function draw(){
             enemy.movement.speed *= 0.98;
         } else {
             enemy.movement.isBraking = 0;
-        }
+            }
 
         if (enemy.movement.speed < enemy.movement.targetSpeed && enemy.movement.isBraking === 0) {
             enemy.movement.speed += enemy.movement.acceleration;
+        }
+
+        //Enemy2
+        if (
+            player.transform.lane === enemy.transform.lane &&
+            game.distanceToEnemy2 < 1000 &&
+            enemy2.transform.x > player.transform.x
+        ) {
+            enemy2.movement.isBraking = 1;
+            enemy2.movement.speed *= 0.98;
+        } else {
+            enemy2.movement.isBraking = 0;
+        }
+
+        if (enemy2.movement.speed < enemy2.movement.targetSpeed && enemy2.movement.isBraking === 0) {
+            enemy2.movement.speed += enemy2.movement.acceleration;
+        }
+
+        //Enemy3
+        if (
+            player.transform.lane === enemy.transform.lane &&
+            game.distanceToEnemy3 < 1000 &&
+            enemy3.transform.x > player.transform.x
+        ) {
+            enemy3.movement.isBraking = 1;
+            enemy3.movement.speed *= 0.98;
+        } else {
+            enemy3.movement.isBraking = 0;
+        }
+
+        if (enemy3.movement.speed < enemy3.movement.targetSpeed && enemy3.movement.isBraking === 0) {
+            enemy3.movement.speed += enemy3.movement.acceleration;
         }
 
     }
@@ -339,6 +497,8 @@ function draw(){
         }
 
         enemy.transform.x -= enemy.movement.speed + player.movement.speed*deltaTime;
+        enemy2.transform.x -= enemy2.movement.speed + player.movement.speed*deltaTime;
+        enemy3.transform.x -= enemy3.movement.speed + player.movement.speed*deltaTime;
         road.line.x -= player.movement.speed*deltaTime;
 
         if(player.movement.speed <= 0.01 && player.movement.speed >= -0.01){
@@ -360,6 +520,32 @@ function draw(){
                 enemy.leftLane();
             } else{
                 enemy.rightLane();
+            }
+        }
+
+        if(enemy2.transform.x <= 0-enemy2.transform.width+5){
+
+            game.money += player.movement.speed;
+
+            enemy2.transform.x = width*2;
+
+            if(random(0, 1) <= 0.5){
+                enemy2.leftLane();
+            } else{
+                enemy2.rightLane();
+            }
+        }
+
+        if(enemy3.transform.x <= 0-enemy3.transform.width+5){
+
+            game.money += player.movement.speed;
+
+            enemy3.transform.x = width*2;
+
+            if(random(0, 1) <= 0.5){
+                enemy3.leftLane();
+            } else{
+                enemy3.rightLane();
             }
         }
 
@@ -417,11 +603,17 @@ function draw(){
 
     // Player
     fill(40+ player.engine.rpm/player.engine.maxRpm*200, 85-player.engine.rpm/player.engine.maxRpm*80, 180-player.engine.rpm/player.engine.maxRpm*170);
-    rect(player.transform.x  +game.camera.xOffset, player.transform.y - player.transform.height / 2, player.transform.width, player.transform.height);
+    rect(player.transform.x  +game.camera.xOffset, player.transform.y - player.transform.height / 2, player.transform.width, player.transform.height,20);
 
     // Passing Car
     fill(255,200,100)
-    rect(enemy.transform.x   +game.camera.xOffset, enemy.transform.y - enemy.transform.height / 2, enemy.transform.width, enemy.transform.height);
+    rect(enemy.transform.x   +game.camera.xOffset, enemy.transform.y - enemy.transform.height / 2, enemy.transform.width, enemy.transform.height,20);
+
+    fill(20,250,100)
+    rect(enemy2.transform.x   +game.camera.xOffset, enemy2.transform.y - enemy2.transform.height / 2, enemy2.transform.width, enemy2.transform.height,20);
+
+    fill(55,20,190)
+    rect(enemy3.transform.x   +game.camera.xOffset, enemy3.transform.y - enemy3.transform.height / 2, enemy3.transform.width, enemy3.transform.height,20);
 
     textAlign(CENTER);
 
@@ -567,6 +759,8 @@ function draw(){
         textSize(20);
         text("Enemy Lane: " + game.debug.enemyLane, width-225, 80);
         text("Distance to enemy: " + round(game.distanceToEnemy), width-225, 100);
+        text("Distance to enemy2: " + round(game.distanceToEnemy2), width-225, 100);
+        text("Distance to enemy3: " + round(game.distanceToEnemy3), width-225, 100);
         text("Enemy Braking " + enemy.movement.isBraking, width-225, 120);
         text("deltaTime: " + round(deltaTime,1), width-225,140);
         text("Engine RPM: " + round(player.engine.rpm), width-225,160);
